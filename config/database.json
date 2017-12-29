@@ -1,0 +1,6 @@
+{
+  "host": "192.168.77.4",
+  "user": "hadoop",
+  "passwd": "mysql",
+  "db": "KB"
+}

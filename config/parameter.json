@@ -1,0 +1,6 @@
+{
+  "base": "/home/hadoop",
+  "landing": "landing",
+  "staging": "staging",
+  "archive": "archive"
+}
