@@ -16,26 +16,18 @@ def get_db_connector():
         db.close()
 
 
-def get_table(table_name):
+def get_table(table_name, *column):
+    if column is None:
+        column = ['value']
     with get_db_connector() as db:
         cur = db.cursor()
-        if table_name == 'lkp_last_name':
-            cur.execute("select value, if_common from lkp_last_name")
-            data = {}
-            for i in cur.fetchall():
-                data[i[0]] = i[1]
-        elif table_name == 'lkp_name_respected':
-            cur.execute("select value from lkp_name_respected")
-            data = [i[0] for i in cur.fetchall()]
-        elif table_name == 'lkp_minority_name':
-            cur.execute("select value from lkp_minority_name")
-            data = [i[0] for i in cur.fetchall()]
-        elif table_name == 'lkp_vulgar_name':
-            cur.execute("select value from lkp_vulgar_name")
-            data = [i[0] for i in cur.fetchall()]
-        else:
-            data = None
-    return data
+        sql = "select "
+        for f in column:
+            sql += f + ","
+        sql[-1] = " "
+        sql += "from " + table_name
+        cur.execute(sql)
+        return cur.fetchall()
 
 
 def get_meta(file_name):

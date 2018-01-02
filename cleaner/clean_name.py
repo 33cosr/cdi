@@ -8,11 +8,14 @@ import clean
 class Cleaner(clean.BaseCleaner):
     def __init__(self, data_set, func_list):
         clean.BaseCleaner.__init__(self, data_set, func_list)
-        self.last_name_list = libs.db_connector.get_table('lkp_last_name')
-        self.name_respected_list = libs.db_connector.get_table('lkp_name_respected')
+        self.last_name_list = {}
+        data = libs.db_connector.get_table('lkp_last_name', 'value', 'most_common_flag')
+        for i in data:
+            self.last_name_list[i[0]] = i[1]
+        self.name_respected_list = [i[0] for i in libs.db_connector.get_table('lkp_name_respected')]
         self.name_list = [self.first_name, self.last_name, self.full_name, self.middle_name]
-        self.minority_name_list = libs.db_connector.get_table('lkp_minority_name')
-        self.vulgar_name_list = libs.db_connector.get_table('lkp_vulgar_name')
+        self.minority_name_list = [i[0] for i in libs.db_connector.get_table('lkp_minority_name')]
+        self.vulgar_name_list = [i[0] for i in libs.db_connector.get_table('lkp_vulgar_name')]
 
     def clean(self):
         for i in range(1, len(self.data_set)):

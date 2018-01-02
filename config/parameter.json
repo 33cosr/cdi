@@ -1,5 +1,5 @@
 {
-  "base": "/home/hadoop",
+  "base": "/project/cfmp/scripts/crframework/test/",
   "landing": "landing",
   "staging": "staging",
   "archive": "archive"
