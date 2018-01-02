@@ -17,15 +17,15 @@ def get_db_connector():
 
 
 def get_table(table_name, *column):
-    if column is None:
+    if column == ():
         column = ['value']
     with get_db_connector() as db:
         cur = db.cursor()
         sql = "select "
         for f in column:
             sql += f + ","
-        sql[-1] = " "
-        sql += "from " + table_name
+        sql = sql[:-1]
+        sql += " from " + table_name
         cur.execute(sql)
         return cur.fetchall()
 
