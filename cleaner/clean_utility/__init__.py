@@ -1,2 +1,2 @@
-import chinese_string
+import unicode_string
 import vulgar_name

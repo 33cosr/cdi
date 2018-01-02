@@ -12,6 +12,7 @@ class Cleaner(clean.BaseCleaner):
         self.name_respected_list = common.db_connector.get_table('lkp_name_respected')
         self.name_list = [self.first_name, self.last_name, self.full_name, self.middle_name]
         self.minority_name_list = common.db_connector.get_table('lkp_minority_name')
+        self.vulgar_name_list = common.db_connector.get_table('lkp_vulgar_name')
 
     def clean(self):
         for i in range(1, len(self.data_set)):
@@ -25,7 +26,7 @@ class Cleaner(clean.BaseCleaner):
 
     def full2half(self, record):
         for i in self.name_list:
-            record[i] = clean_utility.chinese_string.stringQ2B(record[i])
+            record[i] = clean_utility.unicode_string.stringQ2B(record[i])
 
     def trim(self, record):
         for i in self.name_list:
@@ -37,11 +38,11 @@ class Cleaner(clean.BaseCleaner):
 
     def remove_alphabet(self, record):
         for i in self.name_list:
-            record[i] = u''.join([uchar for uchar in record[i] if not clean_utility.chinese_string.is_alpha(uchar)])
+            record[i] = u''.join([uchar for uchar in record[i] if not clean_utility.unicode_string.is_alpha(uchar)])
 
     def filter_vulgar_list(self, record):
         for i in self.name_list:
-            if clean_utility.if_vulgar():
+            if record[i] in self.vulgar_name_list:
                 record[i] = u''
 
     def org_name2name(self, record):
@@ -223,7 +224,7 @@ class Cleaner(clean.BaseCleaner):
 
     def update_flag_12(self, record):
         full_name = record[self.full_name]
-        if len(full_name) > 3 and clean_utility.chinese_string.is_all_alpha(full_name):
+        if len(full_name) > 3 and clean_utility.unicode_string.is_all_alpha(full_name):
             record[self.name_flag] = 6
 
     def update_flag_13(self, record):
