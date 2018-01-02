@@ -1,6 +1,6 @@
 import json
 import os
-from common import constant
+from libs import constant
 
 
 class Parameter:

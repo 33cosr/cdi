@@ -1,13 +1,13 @@
 # -*- coding: UTF-8 -*-
-import common
+import libs
 
 
 class BaseCleaner:
     def __init__(self, data_set, func_list):
         self.func_list = func_list
         self.data_set = data_set
-        input_layout = common.parameter.get_layout('input')
-        output_layout = common.parameter.get_layout('output')
+        input_layout = libs.parameter.get_layout('input')
+        output_layout = libs.parameter.get_layout('output')
         n = len(input_layout)
         self.sequence = input_layout['Input_Sequence_Number']
         self.first_name = input_layout['Input_First_Name']
