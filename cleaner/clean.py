@@ -20,6 +20,18 @@ class BaseCleaner:
         self.address1 = input_layout['Input_Address_Line_1']
         self.address2 = input_layout['Input_Address_Line_2']
         self.address3 = input_layout['Input_Address_Line_3']
+        self.email_address1 = input_layout['Input_Email_Address_1']
+        self.email_address2 = input_layout['Input_Email_Address_2']
+        self.phone1 = input_layout['Input_Phone_1']
+        self.phone2 = input_layout['Input_Phone_2']
+        self.phone3 = input_layout['Input_Phone_3']
+        self.qq = input_layout['Input_QQ']
         self.name_flag = output_layout['Name_Conf_flag'] + n
+        self.email1_flag = output_layout['Email1_Conf_flag'] + n
+        self.email2_flag = output_layout['Email2_Conf_flag'] + n
 
+    def clean(self):
+        for i in range(1, len(self.data_set)):
+            for f in self.func_list:
+                getattr(self, f)(self.data_set[i])
 

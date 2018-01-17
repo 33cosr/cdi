@@ -125,7 +125,9 @@
   "output": [
     "Org_Name_Conf_flag",
     "Name_Conf_flag",
-    "Govt_ID_valid_flg"
+    "Govt_ID_valid_flag",
+    "Email1_Conf_flag",
+    "Email2_Conf_flag"
   ],
   "Input_Sequence_Number": 1,
   "Input_Country_Code": 2,

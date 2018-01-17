@@ -2,5 +2,7 @@
   "host": "192.168.77.4",
   "user": "hadoop",
   "passwd": "mysql",
-  "db": "KB"
+  "db": "KB",
+  "charset": "utf8",
+  "use_unicode": true
 }

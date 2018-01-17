@@ -16,11 +16,7 @@ class Cleaner(clean.BaseCleaner):
         self.name_list = [self.first_name, self.last_name, self.full_name, self.middle_name]
         self.minority_name_list = [i[0] for i in libs.db_connector.get_table('lkp_minority_name')]
         self.vulgar_name_list = [i[0] for i in libs.db_connector.get_table('lkp_vulgar_name')]
-
-    def clean(self):
-        for i in range(1, len(self.data_set)):
-            for f in self.func_list:
-                getattr(self, f)(self.data_set[i])
+        print self.vulgar_name_list
 
     def remove_special_character(self, record):
         for i in self.name_list:
@@ -56,6 +52,7 @@ class Cleaner(clean.BaseCleaner):
 
     def nick_name2name(self, record):
         self.other2name(record, [self.nick_name])
+        record[self.nick_name] = u''
 
     def other2name(self, record, field_list):
         for i in self.name_list:
@@ -65,17 +62,16 @@ class Cleaner(clean.BaseCleaner):
             val = record[i].strip()
             if len(val) in [2, 3] and val[0] in self.last_name_list:
                 record[self.full_name] = val
-                record[i] = u''
                 return
 
     def other2prefix(self, record, field_list):
         if record[self.prefix_name]:
             return
         for i in field_list:
-            val = record[i].strip()
+            record[i] = record[i].strip()
             for name in self.name_respected_list:
-                if name in val:
-                    val.replace(name, '')
+                if name in record[i]:
+                    record[i] = record[i].replace(name, u'')
                     record[self.prefix_name] = name
                     break
 
@@ -91,7 +87,7 @@ class Cleaner(clean.BaseCleaner):
     def populate_full_name(self, record):
         if not record[self.full_name] and record[self.last_name]\
                 and record[self.first_name]:
-            record[self.full_name] = record[self.last_name] + record[self.first_name]
+            record[self.full_name] = record[self.last_name] + record[self.middle_name] + record[self.first_name]
 
     def other2full(self, record):
         if record[self.first_name] and record[self.last_name] and record[self.middle_name]:
@@ -101,13 +97,13 @@ class Cleaner(clean.BaseCleaner):
                 if not record[self.last_name]:
                     record[self.last_name] = record[self.middle_name]
                 else:
-                    record[self.last_name] = record[self.middle_name]
+                    record[self.first_name] = record[self.middle_name]
                 record[self.middle_name] = u''
             else:
                 if not record[self.last_name]:
                     record[self.last_name] = record[self.first_name]
                     record[self.first_name] = u''
-            record[self.full_name] = record[self.first_name] + record[self.last_name]
+            record[self.full_name] = record[self.last_name] + record[self.first_name]
 
     def full2other(self, record):
         if record[self.full_name] and len(record[self.full_name]) < 5 and not record[self.last_name] \
@@ -119,6 +115,7 @@ class Cleaner(clean.BaseCleaner):
                 record[self.first_name] = record[self.full_name][1:]
                 record[self.last_name] = record[self.full_name][:1]
 
+    # 3-10
     def full2first(self, record):
         if record[self.full_name] and len(record[self.full_name]) < 5 and \
                         record[self.last_name] == record[self.full_name] and not record[self.first_name]:
@@ -160,14 +157,16 @@ class Cleaner(clean.BaseCleaner):
         if record[self.full_name] and len(record[self.full_name]) == 4 and \
                 record[self.full_name] == record[self.last_name] + record[self.first_name] and \
                 record[self.full_name][0] == record[self.full_name][1] and record[self.full_name][0] in self.last_name_list:
-            record[self.last_name] = record[self.full_name].pop(0)
+            record[self.last_name] = record[self.full_name][0]
+            record[self.full_name] = record[self.full_name][1:]
             record[self.first_name] = record[self.full_name][1:]
 
     def dedup_last_3(self, record):
         if record[self.full_name] and len(record[self.full_name]) == 3 and \
                 record[self.full_name] == record[self.last_name] + record[self.first_name] and \
                 record[self.full_name][0] == record[self.full_name][1] and record[self.full_name][0] in self.last_name_list:
-            record[self.last_name] = record[self.full_name].pop(0)
+            record[self.last_name] = record[self.full_name][0]
+            record[self.full_name] = record[self.full_name][1:]
             record[self.first_name] = record[self.full_name][1:]
 
     def update_flag_1(self, record):

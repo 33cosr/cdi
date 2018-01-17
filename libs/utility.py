@@ -13,5 +13,7 @@ def array_to_file(path, data, delimiter):
     with io.open(path, mode="w", encoding="utf-8") as f:
         for line in data:
             for field in line[:-1]:
+                if type(field) == int:
+                    field = str(field).decode("utf-8")
                 f.write(field + delimiter)
             f.write(line[-1] + '\n')
